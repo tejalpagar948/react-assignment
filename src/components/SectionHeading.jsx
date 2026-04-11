@@ -1,4 +1,4 @@
-import LineSvg from '../assets/icons/line.svg';
+import LineSvg from '../assets/icons/Line.svg';
 
 const SectionHeading = ({
   label,
