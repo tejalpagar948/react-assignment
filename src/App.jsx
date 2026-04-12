@@ -6,8 +6,7 @@ import About from './components/sections/About';
 import Services from './components/sections/Services';
 import VideoSection from './components/sections/VideoSection';
 import ProvenExpertise from './components/sections/ProvenExpertise';
-import BlogSection from './components/sections/BlogSection';
-import Newsletter from './components/sections/Newsletter';
+import BlogSection from './components/sections/Blogs';
 import Footer from './components/sections/Footer';
 
 function App() {
@@ -19,7 +18,6 @@ function App() {
       <VideoSection />
       <ProvenExpertise />
       <BlogSection />
-      {/* <Newsletter /> */}
       <Footer />
     </>
   );
