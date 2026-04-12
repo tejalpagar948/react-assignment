@@ -1,4 +1,4 @@
-import Button from '../Button';
+import Button from '../elements/Button';
 
 const stats = [
   {
@@ -21,31 +21,37 @@ const stats = [
 export default function ProvenExpertise() {
   return (
     <section className="bg-brandGreen relative">
-      {/* Floating Card */}
+      {/* White Floating Container */}
       <div className="bg-white rounded-t-3xl w-full">
-        <div className="wrapper py-36 grid md:grid-cols-7 gap-10 -mt-24 relative z-10">
-          {/* Left Section */}
-          <div className="md:col-span-3 grid">
-            <h3 className="">Proven Expertise</h3>
+        <div className="wrapper pt-16 md:pt-36 pb-24 grid grid-cols-1 md:grid-cols-7 gap-8 md:gap-10 -mt-16 md:-mt-24 relative z-10">
+          {/* Left Side */}
+          <div className="md:col-span-3 grid text-center md:text-left items-center md:items-start">
+            <h3>Proven Expertise</h3>
 
-            <p className="text-gray-600 text-2xl font-light">
+            <p className="text-gray-600 text-lg md:text-2xl font-light mt-2 md:mt-0">
               A Legacy of Success
             </p>
 
-            <div className="mt-6">
+            <div className="mt-6 flex justify-center md:justify-start">
               <Button>Contact Us</Button>
             </div>
           </div>
 
-          {/* Stats Section */}
-          <ul className="grid md:col-span-4 md:grid-cols-3 gap-5">
-            {stats.map((item, index) => (
+          {/* Stats */}
+          <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-5 md:col-span-4">
+            {stats.map(({ value, title, description }) => (
               <li
-                key={index}
-                className="border-r border-gray-300 pr-5 last:border-r-0 last:pr-0">
-                <span className="text-5xl font-semibold">{item.value}</span>
-                <p className="font-medium text-xl mt-2">{item.title}</p>
-                <p className="text-sm text-gray-500 mt-1">{item.description}</p>
+                key={value}
+                className="border-b md:border-b-0 md:border-r border-gray-300 pb-5 md:pb-0 md:pr-5 last:border-0 last:pr-0 last:pb-0 text-center md:text-left">
+                <span className="text-4xl md:text-5xl font-semibold">
+                  {value}
+                </span>
+
+                <p className="font-medium text-lg md:text-xl mt-2">{title}</p>
+
+                <p className="text-xs md:text-sm text-gray-500 mt-1">
+                  {description}
+                </p>
               </li>
             ))}
           </ul>
