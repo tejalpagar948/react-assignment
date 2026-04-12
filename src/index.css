@@ -7,7 +7,7 @@
 }
 
 h3 {
-  @apply text-[56px] leading-[1.1];
+  @apply text-[30px] lg:text-[56px] leading-[1.1];
 }
 
 h2 {
