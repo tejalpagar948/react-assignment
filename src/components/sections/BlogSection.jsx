@@ -1,24 +1,25 @@
+import { useApi } from '../../hooks/useApi';
+import { homeApi } from '../../api/homeApi';
 import SectionHeading from '../SectionHeading';
 import BlogImg1 from '../../assets/images/blog section image.jpg';
+import { BlogShimmer } from '../skeletons/BlogShimmer';
 
 export default function BlogSection() {
-  const blogs = [
-    {
-      img: BlogImg1,
-      title: 'Sustainability Practices in Bioenergy Production',
-      desc: 'We have a rich history of delivering sustainable waste management solutions. We have a deep understanding of the challenges faced by our clients',
-    },
-    {
-      img: '/blog2.jpg',
-      title: 'Natural Solutions for Health and Wellness',
-      desc: 'We have a rich history of delivering sustainable waste management solutions. We have a deep understanding of the challenges faced by our clients',
-    },
-    {
-      img: '/blog3.jpg',
-      title: 'Modern Technology for Optimal Health',
-      desc: 'We have a rich history of delivering sustainable waste management solutions. We have a deep understanding of the challenges faced by our clients',
-    },
-  ];
+  const { data, loading, error } = useApi(homeApi.getBlogs);
+
+  // ✅ transform API → UI
+  const blogs = data.map((item) => ({
+    id: item.id,
+    title: item.TITLE,
+    desc: item.DESCRIPTION,
+    img: item.SERVICE_IMG,
+  }));
+
+  // ✅ loading
+  if (loading) return <BlogShimmer />;
+
+  // ✅ error
+  if (error) return <p className="p-10">Something went wrong</p>;
 
   return (
     <section className="py-20 px-6 md:px-12 bg-white" id="blogs">
@@ -39,39 +40,28 @@ export default function BlogSection() {
 
       {/* Blog Cards */}
       <div className="grid md:grid-cols-3 gap-8 mt-12 max-w-6xl mx-auto">
-        {blogs.map((blog, index) => (
+        {blogs.map((blog) => (
           <div
-            key={index}
+            key={blog.id}
             className="group transition duration-300 hover:-translate-y-1">
-            {/* 
-               OUTER CONTAINER: 
-               Relative positioning to anchor the absolute circle and button.
-               No 'overflow-hidden' here so the circle is visible.
-            */}
             <div className="relative">
-              {/* IMAGE WRAPPER 
-                  Only round the Top-Left, Top-Right, and Bottom-Left.
-                  Bottom-Right is kept SHARP (none).
-              */}
+              {/* IMAGE */}
               <div className="overflow-hidden rounded-tl-[30px] rounded-tr-[30px] rounded-bl-[30px] rounded-br-none">
                 <img
-                  src={blog.img}
-                  alt=""
+                  src={blog.img || BlogImg1}
+                  alt={blog.title}
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = BlogImg1;
+                  }}
                   className="h-[260px] w-full object-cover group-hover:scale-105 transition-transform duration-300"
                 />
               </div>
 
-              {/* WHITE CURVE (THE NOTCH) 
-                  - 'bottom-0 right-0': Anchors to the bottom-right corner.
-                  - 'translate-x-1/2 translate-y-1/2': Centers the circle ON the corner.
-                  - 'bg-white': Matches the section background to "cut out" the corner.
-              */}
+              {/* White Curve */}
               <div className="absolute bottom-[25px] right-[25px] w-[80px] h-[80px] bg-white rounded-full translate-x-1/2 translate-y-1/2"></div>
 
-              {/* BUTTON 
-                  - Same positioning as the white curve so it sits centered inside it.
-                  - 'z-10': Ensures it sits on top of the white curve.
-              */}
+              {/* Button */}
               <div className="absolute bottom-[25px] right-[25px] translate-x-1/2 translate-y-1/2 z-10">
                 <div className="bg-brandGreen w-14 h-14 flex items-center justify-center rounded-full shadow-lg cursor-pointer hover:bg-green-700 transition-colors">
                   <div className="w-11 h-11 bg-brandGreen rounded-full flex items-center justify-center">
@@ -92,8 +82,9 @@ export default function BlogSection() {
                 </div>
               </div>
             </div>
+
+            {/* Content */}
             <div className="px-5">
-              {/* Content */}
               <h3 className="mt-5 text-2xl font-semibold leading-[1.2]">
                 {blog.title}
               </h3>

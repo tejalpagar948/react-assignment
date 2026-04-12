@@ -1,44 +1,44 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useApi } from '../../hooks/useApi';
+import { homeApi } from '../../api/homeApi';
 import DownArrowImgBg from '../../assets/icons/down-arrow-bg.svg';
 import UpArrowImgBg from '../../assets/icons/up-arrow-bg.svg';
 import DownArrowImg from '../../assets/icons/arrow-down.svg';
 import UpArrowImg from '../../assets/icons/arrow-up.svg';
-import BiomassImg from '../../assets/images/how we work section image.jpg';
 import SectionHeading from '../SectionHeading';
-
-const services = [
-  {
-    id: 1,
-    number: '01',
-    title: 'Integrated Solid Waste Management',
-    description:
-      'is a comprehensive approach to managing waste that combines various waste management techniques to minimize environmental impact and promote sustainability.',
-    image: '/waste.jpg',
-  },
-  {
-    id: 2,
-    number: '02',
-    title: 'Biomass Fuel & Green Energy',
-    description:
-      'Biomass fuel is a renewable energy source derived from organic materials such as plants, agricultural and forestry residues, animal waste, and industrial by-products.',
-    image: BiomassImg,
-  },
-  {
-    id: 3,
-    number: '03',
-    title: 'Bio Gas – CBG Fuel',
-    description:
-      'Bio gas is a renewable fuel produced from the anaerobic digestion of organic materials such as agricultural waste, animal manure, food waste, and sewage sludge.',
-    image: '/biogas.jpg',
-  },
-];
+import BiomassImg from '../../assets/images/how we work section image.jpg';
+import { ServicesShimmer } from '../skeletons/ServicesShimmer';
 
 export default function Services() {
-  const [active, setActive] = useState(2);
+  const { data, loading, error } = useApi(homeApi.getServices);
+
+  const [active, setActive] = useState(null);
 
   const toggle = (id) => {
     setActive(active === id ? null : id);
   };
+
+  // ✅ convert API data → UI format
+  const services = (data || []).map((item, index) => ({
+    id: item.id,
+    number: String(index + 1).padStart(2, '0'),
+    title: item.TITLE,
+    description: item.DESCRIPTION,
+    image: item.SERVICE_IMG,
+  }));
+
+  // ✅ open LAST item by default after API loads
+  useEffect(() => {
+    if (data && data.length > 0) {
+      setActive(data[data.length - 1]?.id);
+    }
+  }, [data]);
+
+  // ✅ loading
+  if (loading) return <ServicesShimmer />;
+
+  // ✅ error
+  if (error) return <p className="p-10">Something went wrong</p>;
 
   return (
     <section className="px-6 md:px-16 py-20" id="services">
@@ -63,27 +63,22 @@ export default function Services() {
               onClick={() => toggle(item.id)}
               className="flex justify-between">
               <div className="flex gap-6 cursor-pointer w-[65%]">
-                {/* Number */}
                 <span className="text-[28px] font-medium">{item.number}</span>
-
-                {/* Title */}
                 <h3 className="w-1/2 text-[28px] font-medium">{item.title}</h3>
               </div>
+
               <div className="flex gap-6 cursor-pointer w-[45%] justify-between">
-                {/* Description */}
                 <p className="w-[75%] text-gray-500 text-sm">
                   {item.description}
                 </p>
 
-                {/* Arrow */}
-                <div className=" flex justify-end">
+                <div className="flex justify-end">
                   <div className="relative w-10 h-10">
                     <img
                       src={active === item.id ? UpArrowImgBg : DownArrowImgBg}
                       className="w-full h-full"
                       alt="bg"
                     />
-
                     <img
                       src={active === item.id ? UpArrowImg : DownArrowImg}
                       className="absolute inset-0 m-auto w-7 h-7"
@@ -102,13 +97,17 @@ export default function Services() {
                   : 'max-h-0 opacity-0'
               }`}>
               <img
-                src={item.image}
+                src={item.image || BiomassImg}
                 alt={item.title}
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = BiomassImg;
+                }}
                 className="w-11/12 h-[550px] object-cover rounded-3xl mr-8"
               />
             </div>
 
-            {/* Divider (ONLY if not last item) */}
+            {/* Divider */}
             {index !== services.length - 1 && (
               <div className="border-b-[1.5px] border-brandGreen mt-16" />
             )}
