@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "https://sysco180.dvworks.in/$1"
+    }
+  ]
+}
